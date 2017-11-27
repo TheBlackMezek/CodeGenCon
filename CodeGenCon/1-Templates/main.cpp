@@ -63,12 +63,56 @@ int main()
 	notEqualAssert(1, 2);
 
 
+	float thetaMod = 1;
+	float thetaModMod = 0.01f;
+
+	float posMod = 1;
+
 	bool shouldContinue = true;
 	while (sfw::stepContext() && shouldContinue)
 	{
 		shouldContinue = !sfw::getKey(256);
 
-		sfw::drawCircle(add(pos.x, pos.y), pos.y, 20);
+		vec2 pos1 = { 0,0 };
+		bool drawLine = false;
+
+		for (float theta = 0; theta < 720; theta += 0.5f)
+		{
+			vec2 radVec;
+			radVec.x = cos(theta + posMod);
+			radVec.y = sin(theta + posMod);
+
+			radVec = radVec * (theta * (theta / thetaMod));
+
+			vec2 center = { 400, 300 };
+
+			radVec = radVec + center;
+
+			if (!drawLine)
+			{
+				pos1 = radVec;
+				drawLine = true;
+			}
+			else
+			{
+				sfw::drawLine(pos1.x, pos1.y, radVec.x, radVec.y);
+				pos1 = radVec;
+			}
+
+			//sfw::drawCircle(radVec.x + center.x, radVec.y + center.y, 2);
+		}
+
+		thetaMod += thetaModMod;
+		if (thetaMod > 2)
+		{
+			thetaModMod = -0.01f;
+		}
+		else if (thetaMod < 1)
+		{
+			thetaModMod = 0.01f;
+		}
+
+		posMod -= 0.01f;
 	}
 
 

@@ -1,4 +1,6 @@
 
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <iostream>
 #include <time.h>
 
@@ -8,6 +10,8 @@
 #include "TemplateFunctions.h"
 
 
+
+vec2 getClosestPointOnSpiral(vec2 pos);
 
 
 int main()
@@ -102,7 +106,7 @@ int main()
 			//sfw::drawCircle(radVec.x + center.x, radVec.y + center.y, 2);
 		}
 
-		thetaMod += thetaModMod;
+		//thetaMod += thetaModMod;
 		if (thetaMod > 2)
 		{
 			thetaModMod = -0.01f;
@@ -112,9 +116,38 @@ int main()
 			thetaModMod = 0.01f;
 		}
 
-		posMod -= 0.01f;
+		//posMod -= 0.01f;
+
+
+		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
+		vec2 mSpiralPos = { mpos.x - 400, mpos.y - 300 };
+
+		float rad = magnitude(mSpiralPos);
+		float th = acos(mSpiralPos.x);
+
+		
+
+
 	}
 
 
 	return 0;
+}
+
+vec2 getClosestPointOnSpiral(vec2 pos)
+{
+	vec2 ret = { 0,0 };
+
+
+
+	vec2 spiralPos = { pos.x - 400, pos.y - 300 };
+
+	float rad = magnitude(spiralPos);
+	float th = acos(spiralPos.x);
+
+
+
+
+
+	return ret;
 }

@@ -16,7 +16,7 @@
 vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral);
 vec2 getPointOnSpiral(float angleRad, Spiral spiral);
 void drawSpiral(Spiral spiral);
-float gradientClamp(float val, float max);
+float gradientClamp(float val, float max, bool inverse = false);
 
 
 
@@ -101,8 +101,8 @@ int main()
 
 			//arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
 			//arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
-			arm1mod = gradientClamp(arm1mod, 50.0f);
-			arm2mod = gradientClamp(arm2mod, 50.0f);
+			arm1mod = gradientClamp(arm1mod, 50.0f, true);
+			arm2mod = gradientClamp(arm2mod, 50.0f, true);
 
 			arm1mod *= 10;
 			arm2mod *= 10;
@@ -110,10 +110,12 @@ int main()
 			float finalMod =	arm1mod * (arm1mod < arm2mod) +
 								arm2mod * (arm1mod > arm2mod);
 			
-			if (finalMod < 0)
-			{
-				//finalMod *= -1;
-			}
+			float thetaMod =	arm1point.z * (arm1point.z < arm2point.z) +
+								arm2point.z * (arm1point.z > arm2point.z);
+
+			//thetaMod = gradientClamp(thetaMod, PI * 4);
+
+			finalMod -= thetaMod * thetaMod;
 			
 
 			if (rand() % 100 < finalMod)
@@ -243,7 +245,7 @@ void drawSpiral(Spiral spiral)
 	}
 }
 
-float gradientClamp(float val, float max)
+float gradientClamp(float val, float max, bool inverse)
 {
 	if (val >= max)
 	{
@@ -253,8 +255,12 @@ float gradientClamp(float val, float max)
 	{
 		return 0;
 	}
-	else
+	else if (!inverse)
 	{
 		return val / max;
+	}
+	else
+	{
+		return 1 - (val / max);
 	}
 }

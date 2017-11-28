@@ -32,7 +32,8 @@ public:
 	T back() const;
 	void clear();
 	void erase(size_t idx);
-	int count(T val) const;
+	void erase(size_t start, size_t end);
+	size_t count(T val) const;
 	void insert(T elm, size_t idx);
 	void reserve(size_t newSize);
 	void compact();
@@ -167,7 +168,34 @@ void TVector<T>::erase(size_t idx)
 	--size;
 }
 template<typename T>
-int TVector<T>::count(T val) const
+void TVector<T>::erase(size_t start, size_t end)
+{
+	assert(start < size && "Start index must be within array");
+	assert(end < size && "End index must be within array");
+	assert(start <= end && "Start must be before or at end");
+
+	if (start == end)
+	{
+		erase(start);
+	}
+	else
+	{
+		int diff = end - start + 1;
+		for (int i = start; i <= end; ++i)
+		{
+			data[i] = 0;
+		}
+
+		for (int i = start; i < size - diff; ++i)
+		{
+			data[i] = data[i + diff];
+		}
+
+		size -= diff;
+	}
+}
+template<typename T>
+size_t TVector<T>::count(T val) const
 {
 	int ret = 0;
 

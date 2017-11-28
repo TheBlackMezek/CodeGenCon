@@ -13,12 +13,12 @@ int main()
 	vec.append(2.4f);
 	vec.append(5.4f);
 	vec.append(9.4f);
-	vec.append(5.4f);
+	vec.append(55.4f);
 	vec.append(34.4f);
 	vec.append(91.4f);
 	vec.insert(999.4f, 1);
 	vec[0] = 983.4f;
-	vec.reserve(34);
+	//vec.erase(0, 1);
 	//vec.reserve(91);
 	//vec.erase(0);
 

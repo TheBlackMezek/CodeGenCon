@@ -14,6 +14,8 @@
 vec2 getClosestPointOnSpiral(vec2 pos);
 
 
+float thetaModMod = 0.01f;
+
 int main()
 {
 	srand(time(NULL));
@@ -68,7 +70,6 @@ int main()
 
 
 	float thetaMod = 1;
-	float thetaModMod = 0.01f;
 
 	float posMod = 1;
 
@@ -121,9 +122,9 @@ int main()
 
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
 		vec2 mSpiralPos = { mpos.x - 400, mpos.y - 300 };
+		vec2 closestSpiralPos = getClosestPointOnSpiral(mSpiralPos);
 
-		float rad = magnitude(mSpiralPos);
-		float th = acos(mSpiralPos.x);
+		sfw::drawCircle(mpos.x, mpos.y, distance(mSpiralPos, closestSpiralPos));
 
 		
 
@@ -145,7 +146,32 @@ vec2 getClosestPointOnSpiral(vec2 pos)
 	float rad = magnitude(spiralPos);
 	float th = acos(spiralPos.x);
 
+	float pointTheta = th;
+	
+	vec2 point;
+	point.x = cos(pointTheta);
+	point.y = sin(pointTheta);
 
+	bool foundFlag = false;
+	while (!foundFlag)
+	{
+		float newTheta = pointTheta + PI * 2;
+		vec2 newPoint;
+		newPoint.x = cos(newTheta);
+		newPoint.y = sin(newTheta);
+
+		if (distance(point, pos) <= distance(newPoint, pos))
+		{
+			foundFlag = true;
+		}
+		else
+		{
+			point = newPoint;
+			pointTheta = newTheta;
+		}
+	}
+
+	ret = point;
 
 
 

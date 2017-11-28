@@ -78,21 +78,36 @@ int main()
 	Spiral arm1;
 	arm1.center = { 400, 300 };
 	arm1.rotation = 0;
-	arm1.tightness = 0.5f;
+	arm1.tightness = 0.2f;
 
 	Spiral arm2;
 	arm2.center = { 400, 300 };
 	arm2.rotation = PI;
-	arm2.tightness = 0.5f;
+	arm2.tightness = 0.2f;
 
 
 
-	for (int x = 0; x < 800; ++x)
+	for (int x = 0; x < 800; x += 1)
 	{
-		for (int y = 0; y < 600; ++y)
+		for (int y = 0; y < 600; y += 1)
 		{
 			vec2 pos = { x, y };
+			float arm1mod = distance(pos, getClosestPointOnSpiral(pos, arm1));
+			float arm2mod = distance(pos, getClosestPointOnSpiral(pos, arm2));
+			//std::cout << (int)arm1mod << std::endl;
+			//int finalMod = arm1mod * (arm1mod < arm2mod) + arm2mod * (arm1mod > arm2mod) + 1;
 
+			arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
+			arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
+
+			int finalMod =	arm1mod * (arm1mod < arm2mod) +
+							arm2mod * (arm1mod > arm2mod) + 1;
+			
+
+			if (rand() % finalMod + 1 < 2)
+			{
+				stars.push_back(pos);
+			}
 		}
 	}
 
@@ -109,12 +124,16 @@ int main()
 
 
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
-		vec2 mSpiralPos = { mpos.x - 400, mpos.y - 300 };
 		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, arm1);
-
-		sfw::drawCircle(mpos.x, mpos.y, distance(mSpiralPos, closestSpiralPos));
+		
+		sfw::drawCircle(mpos.x, mpos.y, distance(mpos, closestSpiralPos));
 		sfw::drawCircle(mpos.x, mpos.y, 3);
-		sfw::drawCircle(closestSpiralPos.x + 400, closestSpiralPos.y + 300, 3);
+		sfw::drawCircle(closestSpiralPos.x, closestSpiralPos.y, 3);
+
+		for (int i = 0; i < stars.size(); ++i)
+		{
+			sfw::drawLine(stars[i].x, stars[i].y, stars[i].x + 1, stars[i].y + 1);
+		}
 
 	}
 
@@ -167,6 +186,9 @@ vec2 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 
 	ret = point;
 
+	ret.x += spiral.center.x;
+	ret.y += spiral.center.y;
+
 
 
 	return ret;
@@ -207,3 +229,5 @@ void drawSpiral(Spiral spiral)
 
 	}
 }
+
+

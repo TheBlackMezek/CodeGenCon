@@ -7,14 +7,16 @@
 
 #include "sfwdraw.h"
 #include "MathLib\Vec2.h"
+#include "MathLib\Vec3.h"
 
 #include "TemplateFunctions.h"
 
 
 
-vec2 getClosestPointOnSpiral(vec2 pos, Spiral spiral);
+vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral);
 vec2 getPointOnSpiral(float angleRad, Spiral spiral);
 void drawSpiral(Spiral spiral);
+float gradientClamp(float val, float max);
 
 
 
@@ -92,19 +94,29 @@ int main()
 		for (int y = 0; y < 600; y += 1)
 		{
 			vec2 pos = { x, y };
-			float arm1mod = distance(pos, getClosestPointOnSpiral(pos, arm1));
-			float arm2mod = distance(pos, getClosestPointOnSpiral(pos, arm2));
-			//std::cout << (int)arm1mod << std::endl;
-			//int finalMod = arm1mod * (arm1mod < arm2mod) + arm2mod * (arm1mod > arm2mod) + 1;
+			vec3 arm1point = getClosestPointOnSpiral(pos, arm1);
+			vec3 arm2point = getClosestPointOnSpiral(pos, arm2);
+			float arm1mod = distance(pos, arm1point.xy);
+			float arm2mod = distance(pos, arm2point.xy);
 
-			arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
-			arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
+			//arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
+			//arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
+			arm1mod = gradientClamp(arm1mod, 50.0f);
+			arm2mod = gradientClamp(arm2mod, 50.0f);
 
-			int finalMod =	arm1mod * (arm1mod < arm2mod) +
-							arm2mod * (arm1mod > arm2mod) + 1;
+			arm1mod *= 10;
+			arm2mod *= 10;
+
+			float finalMod =	arm1mod * (arm1mod < arm2mod) +
+								arm2mod * (arm1mod > arm2mod);
+			
+			if (finalMod < 0)
+			{
+				//finalMod *= -1;
+			}
 			
 
-			if (rand() % finalMod + 1 < 2)
+			if (rand() % 100 < finalMod)
 			{
 				stars.push_back(pos);
 			}
@@ -124,7 +136,7 @@ int main()
 
 
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
-		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, arm1);
+		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, arm1).xy;
 		
 		sfw::drawCircle(mpos.x, mpos.y, distance(mpos, closestSpiralPos));
 		sfw::drawCircle(mpos.x, mpos.y, 3);
@@ -141,9 +153,9 @@ int main()
 	return 0;
 }
 
-vec2 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
+vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 {
-	vec2 ret = { 0,0 };
+	vec3 ret = { 0,0,0 };
 
 
 
@@ -184,10 +196,11 @@ vec2 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 		}
 	}
 
-	ret = point;
+	ret.xy = point;
 
 	ret.x += spiral.center.x;
 	ret.y += spiral.center.y;
+	ret.z = pointTheta;
 
 
 
@@ -230,4 +243,18 @@ void drawSpiral(Spiral spiral)
 	}
 }
 
-
+float gradientClamp(float val, float max)
+{
+	if (val >= max)
+	{
+		return 1;
+	}
+	else if (val <= 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return val / max;
+	}
+}

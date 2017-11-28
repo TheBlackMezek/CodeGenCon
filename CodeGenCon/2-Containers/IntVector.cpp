@@ -163,7 +163,7 @@ void IntVector::insert(int elm, size_t idx)
 
 void IntVector::reserve(size_t newSize)
 {
-	if (newSize < capacity)
+	if (newSize > capacity)
 	{
 		int* newData = new int[newSize];
 		memcpy(newData, data, sizeof(int) * size);

@@ -15,6 +15,8 @@ vec2 getClosestPointOnSpiral(vec2 pos);
 
 
 float thetaModMod = 0.01f;
+float thetaMod = 1;
+float posMod = 1;
 
 int main()
 {
@@ -69,9 +71,6 @@ int main()
 	notEqualAssert(1, 2);
 
 
-	float thetaMod = 1;
-
-	float posMod = 1;
 
 	bool shouldContinue = true;
 	while (sfw::stepContext() && shouldContinue)
@@ -81,7 +80,7 @@ int main()
 		vec2 pos1 = { 0,0 };
 		bool drawLine = false;
 
-		for (float theta = 0; theta < 720; theta += 0.5f)
+		for (float theta = 0; theta < PI * 8; theta += 0.1f)
 		{
 			vec2 radVec;
 			radVec.x = cos(theta + posMod);
@@ -122,9 +121,11 @@ int main()
 
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
 		vec2 mSpiralPos = { mpos.x - 400, mpos.y - 300 };
-		vec2 closestSpiralPos = getClosestPointOnSpiral(mSpiralPos);
+		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos);
 
 		sfw::drawCircle(mpos.x, mpos.y, distance(mSpiralPos, closestSpiralPos));
+		sfw::drawCircle(mpos.x, mpos.y, 3);
+		sfw::drawCircle(closestSpiralPos.x + 400, closestSpiralPos.y + 300, 3);
 
 		
 
@@ -143,24 +144,32 @@ vec2 getClosestPointOnSpiral(vec2 pos)
 
 	vec2 spiralPos = { pos.x - 400, pos.y - 300 };
 
-	float rad = magnitude(spiralPos);
-	float th = acos(spiralPos.x);
+	float posRad = magnitude(spiralPos);
+	float posTheta = atan2(spiralPos.y, spiralPos.x) - posMod;
 
-	float pointTheta = th;
-	
+	if (posTheta < -PI)
+	{
+		posTheta += PI * 2;
+	}
+
+	std::cout << PI << "   " << posTheta << std::endl;
+
+	float pointTheta = posTheta;
 	vec2 point;
-	point.x = cos(pointTheta);
-	point.y = sin(pointTheta);
+	point.x = cos(pointTheta + posMod);
+	point.y = sin(pointTheta + posMod);
+	point = point * (pointTheta * (pointTheta / thetaMod));
 
 	bool foundFlag = false;
 	while (!foundFlag)
 	{
 		float newTheta = pointTheta + PI * 2;
 		vec2 newPoint;
-		newPoint.x = cos(newTheta);
-		newPoint.y = sin(newTheta);
+		newPoint.x = cos(newTheta + posMod);
+		newPoint.y = sin(newTheta + posMod);
+		newPoint = newPoint * (newTheta * (newTheta / thetaMod));
 
-		if (distance(point, pos) <= distance(newPoint, pos))
+		if (distance(point, spiralPos) <= distance(newPoint, spiralPos))
 		{
 			foundFlag = true;
 		}

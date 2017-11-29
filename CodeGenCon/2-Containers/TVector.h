@@ -19,6 +19,9 @@ public:
 	TVector();
 	~TVector();
 
+	TVector(const TVector<T>& other);
+	TVector<T>& operator=(const TVector<T> other);
+
 	T& operator[](const size_t idx);
 	const T& operator[](const size_t idx) const;
 
@@ -55,6 +58,29 @@ template<typename T>
 TVector<T>::~TVector()
 {
 	delete[] data;
+}
+
+
+template<typename T>
+TVector<T>::TVector(const TVector<T>& other)
+{
+	data = new T[other.getCapacity()];
+	memcpy(data, other.c_ptr(), sizeof(T) * other.getCapacity());
+	capacity = other.getCapacity();
+	size = other.getSize();
+}
+template<typename T>
+TVector<T>& TVector<T>::operator=(const TVector<T> other)
+{
+	T* newData = new T[other.getCapacity()];
+	memcpy(newData, other.c_ptr(), sizeof(T) * other.getCapacity());
+	delete[] data;
+	data = newData;
+
+	capacity = other.getCapacity();
+	size = other.getSize();
+
+	return *this;
 }
 
 

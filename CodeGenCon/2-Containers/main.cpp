@@ -22,16 +22,19 @@ int main()
 	//vec.reserve(91);
 	//vec.erase(0);
 
-	std::cout << "CAPACITY: " << vec.getCapacity() << std::endl;
-	std::cout << "SIZE: " << vec.getSize() << std::endl;
-	std::cout << vec.empty() << std::endl;
+	TVector<float> veec;
+	veec = vec;
+
+	std::cout << "CAPACITY: " << veec.getCapacity() << std::endl;
+	std::cout << "SIZE: " << veec.getSize() << std::endl;
+	std::cout << veec.empty() << std::endl;
 	std::cout << std::endl;
 
-	for (int i = 0; i < vec.getCapacity(); ++i)
+	for (int i = 0; i < veec.getCapacity(); ++i)
 	{
-		if (i < vec.getSize())
+		if (i < veec.getSize())
 		{
-			std::cout << vec.at(i) << std::endl;
+			std::cout << veec.at(i) << std::endl;
 		}
 		else
 		{

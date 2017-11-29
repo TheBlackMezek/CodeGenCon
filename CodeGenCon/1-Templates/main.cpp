@@ -17,6 +17,8 @@ vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral);
 vec2 getPointOnSpiral(float angleRad, Spiral spiral);
 void drawSpiral(Spiral spiral);
 float gradientClamp(float val, float max, bool inverse = false);
+Galaxy genGalaxy(vec2 size);
+void drawGalaxy(Galaxy galaxy, float rotation);
 
 
 
@@ -73,59 +75,13 @@ int main()
 	notEqualAssert(1, 2);
 
 
-
-	std::vector<vec2> stars;
-
-
-	Spiral arm1;
-	arm1.center = { 400, 300 };
-	arm1.rotation = 0;
-	arm1.tightness = 0.2f;
-
-	Spiral arm2;
-	arm2.center = { 400, 300 };
-	arm2.rotation = PI;
-	arm2.tightness = 0.2f;
+	Galaxy galaxy = genGalaxy({800, 600});
 
 
 
-	for (int x = 0; x < 800; x += 1)
-	{
-		for (int y = 0; y < 600; y += 1)
-		{
-			vec2 pos = { x, y };
-			vec3 arm1point = getClosestPointOnSpiral(pos, arm1);
-			vec3 arm2point = getClosestPointOnSpiral(pos, arm2);
-			float arm1mod = distance(pos, arm1point.xy);
-			float arm2mod = distance(pos, arm2point.xy);
+	
 
-			//arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
-			//arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
-			arm1mod = gradientClamp(arm1mod, 50.0f, true);
-			arm2mod = gradientClamp(arm2mod, 50.0f, true);
-
-			arm1mod *= 10;
-			arm2mod *= 10;
-
-			float finalMod =	arm1mod * (arm1mod < arm2mod) +
-								arm2mod * (arm1mod > arm2mod);
-			
-			float thetaMod =	arm1point.z * (arm1point.z < arm2point.z) +
-								arm2point.z * (arm1point.z > arm2point.z);
-
-			//thetaMod = gradientClamp(thetaMod, PI * 4);
-
-			finalMod -= thetaMod * thetaMod;
-			
-
-			if (rand() % 100 < finalMod)
-			{
-				stars.push_back(pos);
-			}
-		}
-	}
-
-
+	float galrot = 0;
 
 
 	bool shouldContinue = true;
@@ -138,7 +94,7 @@ int main()
 
 
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
-		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, arm1).xy;
+		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, galaxy.spiral).xy;
 		
 		//sfw::drawCircle(mpos.x, mpos.y, distance(mpos, closestSpiralPos));
 
@@ -150,11 +106,9 @@ int main()
 		//sfw::drawLine(400, 300, closestSpiralPos.x, closestSpiralPos.y);
 
 
-		for (int i = 0; i < stars.size(); ++i)
-		{
-			sfw::drawLine(stars[i].x, stars[i].y, stars[i].x + 1, stars[i].y + 1);
-		}
+		drawGalaxy(galaxy, galrot);
 
+		galrot -= 0.001f;
 	}
 
 
@@ -267,5 +221,78 @@ float gradientClamp(float val, float max, bool inverse)
 	else
 	{
 		return 1 - (val / max);
+	}
+}
+
+Galaxy genGalaxy(vec2 size)
+{
+	Galaxy ret;
+	ret.center = { 400, 300 };
+
+	Spiral arm1;
+	arm1.center = { 0, 0 };
+	arm1.rotation = 0;
+	arm1.tightness = 0.2f;
+
+	ret.spiral = arm1;
+
+	Spiral arm2;
+	arm2 = arm1;
+	arm2.rotation = PI;
+
+	for (int x = -size.x / 2; x < size.x / 2; x += 1)
+	{
+		for (int y = -size.y / 2; y < size.y / 2; y += 1)
+		{
+			vec2 pos = { x, y };
+			vec3 arm1point = getClosestPointOnSpiral(pos, arm1);
+			vec3 arm2point = getClosestPointOnSpiral(pos, arm2);
+			float arm1mod = distance(pos, arm1point.xy);
+			float arm2mod = distance(pos, arm2point.xy);
+
+			//arm1mod = clamp(arm1mod, 1.0f, 5000.0f);
+			//arm2mod = clamp(arm2mod, 1.0f, 5000.0f);
+			arm1mod = gradientClamp(arm1mod, 50.0f, true);
+			arm2mod = gradientClamp(arm2mod, 50.0f, true);
+
+			arm1mod *= 10;
+			arm2mod *= 10;
+
+			float finalMod = arm1mod * (arm1mod < arm2mod) +
+				arm2mod * (arm1mod > arm2mod);
+
+			float thetaMod = arm1point.z * (arm1point.z < arm2point.z) +
+				arm2point.z * (arm1point.z > arm2point.z);
+
+			//thetaMod = gradientClamp(thetaMod, PI * 4);
+
+			finalMod -= thetaMod * (thetaMod / 2);
+
+
+			if (rand() % 100 < finalMod)
+			{
+				ret.stars.push_back(pos);
+			}
+		}
+	}
+
+	return ret;
+}
+
+void drawGalaxy(Galaxy galaxy, float rotation)
+{
+	for (int i = 0; i < galaxy.stars.size(); ++i)
+	{
+		vec2 pos = galaxy.stars[i];
+		vec2 drawpos;
+		drawpos.x = pos.x * cos(rotation) - pos.y * sin(rotation);
+		drawpos.y = pos.x * sin(rotation) + pos.y * cos(rotation);
+
+		sfw::drawLine(
+			drawpos.x + galaxy.center.x,
+			drawpos.y + galaxy.center.y,
+			drawpos.x + 1 + galaxy.center.x,
+			drawpos.y + 1 + galaxy.center.y
+		);
 	}
 }

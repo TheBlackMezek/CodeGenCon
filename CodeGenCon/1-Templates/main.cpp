@@ -140,9 +140,15 @@ int main()
 		vec2 mpos = { sfw::getMouseX(), sfw::getMouseY() };
 		vec2 closestSpiralPos = getClosestPointOnSpiral(mpos, arm1).xy;
 		
-		sfw::drawCircle(mpos.x, mpos.y, distance(mpos, closestSpiralPos));
+		//sfw::drawCircle(mpos.x, mpos.y, distance(mpos, closestSpiralPos));
+
 		sfw::drawCircle(mpos.x, mpos.y, 3);
-		sfw::drawCircle(closestSpiralPos.x, closestSpiralPos.y, 3);
+
+		//sfw::drawCircle(closestSpiralPos.x, closestSpiralPos.y, 3);
+		//sfw::drawCircle(400, 300, 7);
+		//sfw::drawLine(400, 300, mpos.x, mpos.y);
+		//sfw::drawLine(400, 300, closestSpiralPos.x, closestSpiralPos.y);
+
 
 		for (int i = 0; i < stars.size(); ++i)
 		{
@@ -163,29 +169,29 @@ vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 
 	vec2 posInSpiral = { pos.x - spiral.center.x, pos.y - spiral.center.y };
 
-	float posRad = magnitude(posInSpiral);
-	float posTheta = atan2(posInSpiral.y, posInSpiral.x) - spiral.rotation;
+	float posAngle = atan2(posInSpiral.y, posInSpiral.x) - spiral.rotation;
 
-	if (posTheta < -PI)
+
+	float pointAngle = posAngle;
+
+	if (pointAngle < 0)
 	{
-		posTheta += PI * 2;
+		pointAngle += PI * 2;
 	}
 
-
-	float pointTheta = posTheta;
 	vec2 point;
-	point.x = cos(pointTheta + spiral.rotation);
-	point.y = sin(pointTheta + spiral.rotation);
-	point = point * (pointTheta * (pointTheta / spiral.tightness));
+	point.x = cos(pointAngle + spiral.rotation);
+	point.y = sin(pointAngle + spiral.rotation);
+	point = point * (pointAngle * (pointAngle / spiral.tightness));
 
 	bool foundFlag = false;
 	while (!foundFlag)
 	{
-		float newTheta = pointTheta + PI * 2;
+		float newAngle = pointAngle + PI * 2;
 		vec2 newPoint;
-		newPoint.x = cos(newTheta + spiral.rotation);
-		newPoint.y = sin(newTheta + spiral.rotation);
-		newPoint = newPoint * (newTheta * (newTheta / spiral.tightness));
+		newPoint.x = cos(newAngle + spiral.rotation);
+		newPoint.y = sin(newAngle + spiral.rotation);
+		newPoint = newPoint * (newAngle * (newAngle / spiral.tightness));
 
 		if (distance(point, posInSpiral) <= distance(newPoint, posInSpiral))
 		{
@@ -194,7 +200,7 @@ vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 		else
 		{
 			point = newPoint;
-			pointTheta = newTheta;
+			pointAngle = newAngle;
 		}
 	}
 
@@ -202,8 +208,7 @@ vec3 getClosestPointOnSpiral(vec2 pos, Spiral spiral)
 
 	ret.x += spiral.center.x;
 	ret.y += spiral.center.y;
-	ret.z = pointTheta;
-
+	ret.z = pointAngle;
 
 
 	return ret;

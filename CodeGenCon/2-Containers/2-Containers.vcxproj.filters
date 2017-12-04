@@ -29,5 +29,8 @@
     <ClInclude Include="TVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TLinkedList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

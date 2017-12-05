@@ -1,7 +1,10 @@
 #pragma once
 
 #include <assert.h>
+#include <iterator>
 
+
+//template<typename T> class LinkedListIterator;
 
 
 template<typename T>
@@ -14,11 +17,31 @@ struct LinkedListNode
 template<typename T>
 class TLinkedList
 {
+	//friend class LinkedListIterator<T>;
 private:
 	LinkedListNode<T>* head;
 	size_t size;
 
 public:
+	
+	class LinkedListIterator
+	{
+	private:
+		LinkedListNode<T>* elm;
+	public:
+		LinkedListIterator(LinkedListNode<T>* node);
+
+		typedef LinkedListIterator iterator;
+		typedef ptrdiff_t difference_type;
+		typedef size_t size_type;
+		typedef T value_type;
+		typedef T* pointer;
+		typedef T& reference;
+		typedef std::forward_iterator_tag iterator_category;
+
+		LinkedListIterator operator++();
+	};
+
 	TLinkedList();
 	~TLinkedList();
 
@@ -30,6 +53,10 @@ public:
 	void clear();
 	void erase(size_t idx);
 
+	LinkedListIterator begin();
+
+	LinkedListIterator end();
+
 	size_t getSize() const;
 	T& at(size_t idx);
 	bool empty();
@@ -37,6 +64,8 @@ public:
 	T& back();
 	size_t count(T val);
 };
+
+
 
 
 
@@ -248,6 +277,26 @@ void TLinkedList<T>::erase(size_t idx)
 
 
 template<typename T>
+typename TLinkedList<T>::LinkedListIterator TLinkedList<T>::begin()
+{
+	return LinkedListIterator(*this, 0);
+}
+/*
+//template<typename T>
+//LinkedListIterator TLinkedList<T>being()
+//{
+//	return LinkedListIterator(*this, 0);
+//}
+
+template<typename T>
+TLinkedList<T>::LinkedListIterator TLinkedList<T>::end()
+{
+	return LinkedListIterator(*this, size-1);
+}
+
+*/
+
+template<typename T>
 size_t TLinkedList<T>::getSize() const
 {
 	return size;
@@ -310,3 +359,24 @@ size_t TLinkedList<T>::count(T val)
 
 	return ret;
 }
+
+
+
+
+
+
+/*
+template<typename T>
+TLinkedList<T>::LinkedListIterator::LinkedListIterator(LinkedListNode<T>* node)
+	: elm(node)
+{
+	
+}
+
+template<typename T>
+TLinkedList<T>::LinkedListIterator TLinkedList<T>::LinkedListIterator::operator++()
+{
+	elm = elm->next;
+}
+
+*/

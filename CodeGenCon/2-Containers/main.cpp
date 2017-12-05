@@ -7,8 +7,12 @@
 
 
 
+
 int main()
 {
+
+
+
 	//TVector<float> vec;
 	//
 	//vec.append(2.4f);
@@ -64,6 +68,17 @@ int main()
 	for (int i = 0; i < llist.getSize(); ++i)
 	{
 		std::cout << llist.at(i) << std::endl;
+	}
+
+	std::cin.get();
+
+	char lkj = 'A';
+	char* c = &lkj;
+
+	for (int i = 0; i < 1000; ++i)
+	{
+		std::cout << *c;
+		++c;
 	}
 
 	std::cin.get();

@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+#include "Iterator.h"
+
 
 template<typename T>
 class TVector
@@ -41,6 +43,9 @@ public:
 	void reserve(size_t newSize);
 	void compact();
 	void pop();
+
+	iterator<TVector<T>> begin();
+	iterator<TVector<T>> end();
 };
 
 
@@ -287,3 +292,16 @@ void TVector<T>::pop()
 	}
 }
 
+
+
+template<typename T>
+iterator<TVector<T>> TVector<T>::begin()
+{
+	return iterator<TVector<T>>(*this, 0);
+}
+
+template<typename T>
+iterator<TVector<T>> TVector<T>::end()
+{
+	return iterator<TVector<T>>(*this, size);
+}

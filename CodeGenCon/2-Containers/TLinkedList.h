@@ -31,14 +31,6 @@ public:
 	public:
 		LinkedListIterator(LinkedListNode<T>* node);
 
-		typedef LinkedListIterator iterator;
-		typedef ptrdiff_t difference_type;
-		typedef size_t size_type;
-		typedef T value_type;
-		typedef T* pointer;
-		typedef T& reference;
-		typedef std::forward_iterator_tag iterator_category;
-
 		LinkedListIterator operator++();
 		T operator*();
 		bool operator==(const LinkedListIterator& other);

@@ -20,6 +20,7 @@ class TLinkedList
 	//friend class LinkedListIterator<T>;
 private:
 	LinkedListNode<T>* head;
+	LinkedListNode<T>* tail;
 	size_t size;
 
 public:
@@ -66,7 +67,7 @@ public:
 
 template<typename T>
 TLinkedList<T>::TLinkedList()
-	: head(nullptr)
+	: head(nullptr), tail(nullptr)
 {
 	size = 0;
 }
@@ -110,12 +111,18 @@ TLinkedList<T>::TLinkedList(TLinkedList<T>& other)
 				lastNode->next = newNode;
 			}
 
+			if (i == size - 1)
+			{
+				tail = newNode;
+			}
+
 			lastNode = newNode;
 		}
 	}
 	else
 	{
 		head = nullptr;
+		tail = nullptr;
 	}
 }
 
@@ -144,6 +151,10 @@ TLinkedList<T>& TLinkedList<T>::operator=(TLinkedList<T>& other)
 			{
 				lastNode->next = newNode;
 			}
+			if (i == size - 1)
+			{
+				tail = newNode;
+			}
 
 			lastNode = newNode;
 		}
@@ -170,16 +181,19 @@ void TLinkedList<T>::append(T val)
 	if (head == nullptr)
 	{
 		head = newNode;
+		tail = newNode;
 		++size;
 	}
 	else
 	{
-		LinkedListNode<T>* node = head;
-		while (node->next != nullptr)
-		{
-			node = node->next;
-		}
-		node->next = newNode;
+		//LinkedListNode<T>* node = head;
+		//while (node->next != nullptr)
+		//{
+		//	node = node->next;
+		//}
+		//node->next = newNode;
+		tail->next = newNode;
+		tail = newNode;
 		++size;
 	}
 }
@@ -236,6 +250,7 @@ void TLinkedList<T>::clear()
 	}
 
 	head = nullptr;
+	tail = nullptr;
 	size = 0;
 }
 
@@ -263,6 +278,12 @@ void TLinkedList<T>::erase(size_t idx)
 		}
 
 		LinkedListNode<T>* delNode = node->next;
+
+		if (delNode == tail)
+		{
+			tail = node;
+		}
+
 		node->next = delNode->next;
 		delete delNode;
 		--size;
@@ -336,7 +357,8 @@ T& TLinkedList<T>::back()
 {
 	assert(size > 0 && "Linked list must have elements to get back");
 
-	return at(size - 1);
+	//return at(size - 1);
+	return tail->val;
 }
 
 template<typename T>

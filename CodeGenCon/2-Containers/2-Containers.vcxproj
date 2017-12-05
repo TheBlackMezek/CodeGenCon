@@ -118,6 +118,7 @@
     <ClInclude Include="Algorithms.h" />
     <ClInclude Include="IntVector.h" />
     <ClInclude Include="Iterator.h" />
+    <ClInclude Include="Queue.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="TLinkedList.h" />
     <ClInclude Include="TVector.h" />

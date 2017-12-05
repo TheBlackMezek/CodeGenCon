@@ -5,6 +5,7 @@
 #include "TVector.h"
 #include "TLinkedList.h"
 #include "Stack.h"
+#include "Queue.h"
 
 
 
@@ -68,19 +69,24 @@ int main()
 	//++iterator2;
 	////iterator++; //this doesn't work
 
-	Stack<int> stack;
-	stack.push(9);
-	stack.push(4);
-	stack.push(1);
+	//Stack<int> stack;
+	//stack.push(9);
+	//stack.push(4);
+	//stack.push(1);
 
-	std::cout << "SIZE: " << stack.size() << std::endl;
-	std::cout << stack.empty() << std::endl;
+	Queue<int> queue;
+	queue.push(9);
+	queue.push(4);
+	queue.push(1);
+
+	std::cout << "SIZE: " << queue.size() << std::endl;
+	std::cout << queue.back() << std::endl;
 	std::cout << std::endl;
 	
-	int size = stack.size();
+	int size = queue.size();
 	for (int i = 0; i < size; ++i)
 	{
-		std::cout << stack.pop() << std::endl;
+		std::cout << queue.pop() << std::endl;
 	}
 
 	std::cin.get();

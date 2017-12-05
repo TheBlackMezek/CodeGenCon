@@ -9,22 +9,13 @@ private:
 	TVector<T> vector;
 
 public:
-	//top is size - 1
-
 	bool empty();
 	int size();
 	T pop();
-	//empty
-	//size
-	//pop
-	// - return the thing that was popped
 
 	void push(T elm);
 	T top();
-	//push
-	// - add element to the top of the stack
-	//top
-	// - access top of the stack
+
 };
 
 

@@ -40,6 +40,9 @@ public:
 		typedef std::forward_iterator_tag iterator_category;
 
 		LinkedListIterator operator++();
+		T operator*();
+		bool operator==(const LinkedListIterator& other);
+		bool operator!=(const LinkedListIterator& other);
 	};
 
 	TLinkedList();
@@ -279,22 +282,24 @@ void TLinkedList<T>::erase(size_t idx)
 template<typename T>
 typename TLinkedList<T>::LinkedListIterator TLinkedList<T>::begin()
 {
-	return LinkedListIterator(*this, 0);
+	return LinkedListIterator(head);
 }
-/*
-//template<typename T>
-//LinkedListIterator TLinkedList<T>being()
-//{
-//	return LinkedListIterator(*this, 0);
-//}
 
 template<typename T>
-TLinkedList<T>::LinkedListIterator TLinkedList<T>::end()
+typename TLinkedList<T>::LinkedListIterator TLinkedList<T>::end()
 {
-	return LinkedListIterator(*this, size-1);
+	int iterator = 0;
+	LinkedListNode<T>* node = head;
+
+	while (iterator != size-1)
+	{
+		node = node->next;
+		++iterator;
+	}
+
+	return LinkedListIterator(node);
 }
 
-*/
 
 template<typename T>
 size_t TLinkedList<T>::getSize() const
@@ -365,18 +370,35 @@ size_t TLinkedList<T>::count(T val)
 
 
 
-/*
+
 template<typename T>
 TLinkedList<T>::LinkedListIterator::LinkedListIterator(LinkedListNode<T>* node)
-	: elm(node)
 {
-	
+	elm = node;
 }
 
 template<typename T>
-TLinkedList<T>::LinkedListIterator TLinkedList<T>::LinkedListIterator::operator++()
+typename TLinkedList<T>::LinkedListIterator TLinkedList<T>::LinkedListIterator::operator++()
 {
 	elm = elm->next;
+	return *this;
 }
 
-*/
+template<typename T>
+T TLinkedList<T>::LinkedListIterator::operator*()
+{
+	return elm->val;
+}
+
+template<typename T>
+bool TLinkedList<T>::LinkedListIterator::operator==(const LinkedListIterator& other)
+{
+	return elm->val == other.elm->val;
+}
+
+template<typename T>
+bool TLinkedList<T>::LinkedListIterator::operator!=(const LinkedListIterator& other)
+{
+	return elm->val != other.elm->val;
+}
+

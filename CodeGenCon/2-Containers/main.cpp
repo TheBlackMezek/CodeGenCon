@@ -61,24 +61,20 @@ int main()
 	TLinkedList<int> llist;
 	llist = list;
 
+	TLinkedList<int>::LinkedListIterator iterator = llist.begin();
+	++iterator;
+	TLinkedList<int>::LinkedListIterator iterator2 = iterator;
+	++iterator2;
+	//iterator++; //this doesn't work
+
 	std::cout << "SIZE: " << llist.getSize() << std::endl;
-	std::cout << llist.count(62) << std::endl;
+	std::cout << "ITERATOR: " << *iterator2 << std::endl;
+	std::cout << (iterator == iterator2) << std::endl;
 	std::cout << std::endl;
 	
 	for (int i = 0; i < llist.getSize(); ++i)
 	{
 		std::cout << llist.at(i) << std::endl;
-	}
-
-	std::cin.get();
-
-	char lkj = 'A';
-	char* c = &lkj;
-
-	for (int i = 0; i < 1000; ++i)
-	{
-		std::cout << *c;
-		++c;
 	}
 
 	std::cin.get();

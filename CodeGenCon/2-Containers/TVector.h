@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+#include "Iterator.h"
+
 
 template<typename T>
 class TVector
@@ -18,6 +20,9 @@ private:
 public:
 	TVector();
 	~TVector();
+
+	TVector(const TVector<T>& other);
+	TVector<T>& operator=(const TVector<T> other);
 
 	T& operator[](const size_t idx);
 	const T& operator[](const size_t idx) const;
@@ -38,6 +43,9 @@ public:
 	void reserve(size_t newSize);
 	void compact();
 	void pop();
+
+	iterator<TVector<T>> begin();
+	iterator<TVector<T>> end();
 };
 
 
@@ -55,6 +63,29 @@ template<typename T>
 TVector<T>::~TVector()
 {
 	delete[] data;
+}
+
+
+template<typename T>
+TVector<T>::TVector(const TVector<T>& other)
+{
+	data = new T[other.getCapacity()];
+	memcpy(data, other.c_ptr(), sizeof(T) * other.getCapacity());
+	capacity = other.getCapacity();
+	size = other.getSize();
+}
+template<typename T>
+TVector<T>& TVector<T>::operator=(const TVector<T> other)
+{
+	T* newData = new T[other.getCapacity()];
+	memcpy(newData, other.c_ptr(), sizeof(T) * other.getCapacity());
+	delete[] data;
+	data = newData;
+
+	capacity = other.getCapacity();
+	size = other.getSize();
+
+	return *this;
 }
 
 
@@ -261,3 +292,16 @@ void TVector<T>::pop()
 	}
 }
 
+
+
+template<typename T>
+iterator<TVector<T>> TVector<T>::begin()
+{
+	return iterator<TVector<T>>(*this, 0);
+}
+
+template<typename T>
+iterator<TVector<T>> TVector<T>::end()
+{
+	return iterator<TVector<T>>(*this, size);
+}

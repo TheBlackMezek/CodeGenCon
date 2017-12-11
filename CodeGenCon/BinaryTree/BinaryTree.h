@@ -15,8 +15,12 @@ public:
 	BinaryTree();
 	~BinaryTree();
 
+	BinaryTree(const BinaryTree& other);
+	BinaryTree(const treeNode* other);
+	BinaryTree& operator=(const BinaryTree& other);
+
 	void insert(int key);
-	treeNode* search(int key);
+	const treeNode* search(int key);
 	void destroyTree();
 
 
@@ -28,5 +32,6 @@ private:
 	void destroyTree(treeNode* node);
 	void insert(int key, treeNode* node);
 	treeNode* search(int key, treeNode* node);
+	treeNode* copyNodes(const treeNode* node);
 };
 

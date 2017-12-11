@@ -14,6 +14,21 @@ BinaryTree::~BinaryTree()
 }
 
 
+BinaryTree::BinaryTree(const BinaryTree& other)
+{
+	root = copyNodes(other.root);
+}
+BinaryTree::BinaryTree(const treeNode* other)
+{
+	root = copyNodes(other);
+}
+BinaryTree& BinaryTree::operator=(const BinaryTree& other)
+{
+	destroyTree();
+	root = copyNodes(other.root);
+}
+
+
 void BinaryTree::insert(int key)
 {
 	if (root != nullptr)
@@ -28,7 +43,7 @@ void BinaryTree::insert(int key)
 		root->right = nullptr;
 	}
 }
-treeNode* BinaryTree::search(int key)
+const treeNode* BinaryTree::search(int key)
 {
 	return search(key, root);
 }
@@ -96,5 +111,19 @@ treeNode* BinaryTree::search(int key, treeNode* node)
 	else
 	{
 		return search(key, node->right);
+	}
+}
+treeNode* BinaryTree::copyNodes(const treeNode* node)
+{
+	if (node != nullptr)
+	{
+		treeNode* newNode = new treeNode;
+		newNode->keyValue = node->keyValue;
+		newNode->left = copyNodes(node->left);
+		newNode->right = copyNodes(node->right);
+	}
+	else
+	{
+		return nullptr;
 	}
 }

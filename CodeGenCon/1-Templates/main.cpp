@@ -18,6 +18,7 @@ vec2 getPointOnSpiral(float angleRad, Spiral spiral);
 void drawSpiral(Spiral spiral);
 float gradientClamp(float val, float max, bool inverse = false);
 Galaxy genGalaxy(vec2 size);
+
 void drawGalaxy(Galaxy galaxy, float rotation);
 
 
@@ -109,6 +110,11 @@ int main()
 		drawGalaxy(galaxy, galrot);
 
 		galrot -= 0.001f;
+
+		if (galrot < -PI * 2)
+		{
+			galrot += PI * 2;
+		}
 	}
 
 

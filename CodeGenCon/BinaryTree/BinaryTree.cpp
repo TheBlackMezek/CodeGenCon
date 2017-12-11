@@ -26,6 +26,7 @@ BinaryTree& BinaryTree::operator=(const BinaryTree& other)
 {
 	destroyTree();
 	root = copyNodes(other.root);
+	return *this;
 }
 
 
@@ -50,6 +51,7 @@ const treeNode* BinaryTree::search(int key)
 void BinaryTree::destroyTree()
 {
 	destroyTree(root);
+	root = nullptr;
 }
 
 
@@ -121,6 +123,7 @@ treeNode* BinaryTree::copyNodes(const treeNode* node)
 		newNode->keyValue = node->keyValue;
 		newNode->left = copyNodes(node->left);
 		newNode->right = copyNodes(node->right);
+		return newNode;
 	}
 	else
 	{

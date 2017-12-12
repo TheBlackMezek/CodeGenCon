@@ -4,22 +4,23 @@
 #include "BinaryTree.h"
 
 
-void printTree(const treeNode* node, int iteration);
+template<typename T>
+void printTree(const treeNode<T>* node, int iteration);
 
 int main()
 {
-	BinaryTree t;
+	BinaryTree<int> t;
 	int rootNum = 100;
 	t.insert(rootNum);
 
 	t.insert(150);
 	t.insert(50);
 
-	BinaryTree tt(t);
-	BinaryTree ttt = t;
+	BinaryTree<int> tt(t);
+	BinaryTree<int> ttt = t;
 
 
-	const treeNode* n = t.search(rootNum);
+	const treeNode<int>* n = t.search(rootNum);
 	printTree(n, 0);
 
 	assert(n->keyValue == rootNum);
@@ -31,7 +32,7 @@ int main()
 	assert(t.search(rootNum) == nullptr);
 
 
-	const treeNode* nn = tt.search(rootNum);
+	const treeNode<int>* nn = tt.search(rootNum);
 	printTree(nn, 0);
 
 	assert(nn->keyValue == rootNum);
@@ -39,12 +40,31 @@ int main()
 	assert(nn->right->keyValue == 150);
 
 
-	const treeNode* nnn = ttt.search(rootNum);
+	const treeNode<int>* nnn = ttt.search(rootNum);
 	printTree(nnn, 0);
 
 	assert(nnn->keyValue == rootNum);
 	assert(nnn->left->keyValue == 50);
 	assert(nnn->right->keyValue == 150);
+
+
+	BinaryTree<char> c;
+	char rootChar = 'c';
+	c.insert(rootChar);
+
+	c.insert('A');
+	c.insert('a');
+	c.insert('1');
+	c.insert('+');
+	c.insert('t');
+
+	const treeNode<char>* cn = c.search(rootChar);
+
+	assert(cn->keyValue == 'c');
+	assert(cn->left->keyValue == 'A');
+	assert(cn->right->keyValue == 't');
+
+	printTree(cn, 0);
 
 
 
@@ -54,7 +74,8 @@ int main()
 }
 
 
-void printTree(const treeNode* node, int iteration)
+template<typename T>
+void printTree(const treeNode<T>* node, int iteration)
 {
 	if (node != nullptr)
 	{
